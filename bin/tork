@@ -60,7 +60,7 @@ warn 'tork: Absorbing test execution overhead...'
   when :over then warn 'tork: Reabsorbing changed overhead files...'
   else
     test_file, line_numbers, *details = details
-    log_file = "log/tork/" + test_file + '.log'
+    log_file = "log/" + test_file + '.log'
     message = [evstr.upcase, test_file, line_numbers.inspect, details].join(' ')
 
     color = case event
