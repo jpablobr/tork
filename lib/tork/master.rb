@@ -1,4 +1,5 @@
 require 'json'
+require 'fileutils'
 require 'tork/server'
 require 'tork/config'
 
@@ -24,7 +25,7 @@ module Master
     # throttle forking rate to meet the maximum concurrent workers limit
     sleep 1 until @command_by_worker_pid.size < Config.max_forked_workers
 
-    log_file = test_file + '.log'
+    log_file = get_log_file(test_file)
     worker_number = @worker_number_pool.shift
 
     Config.before_fork_hooks.each do |hook|
@@ -93,6 +94,14 @@ private
     rescue SystemCallError
       # raised by wait2() when there are currently no child processes
     end
+  end
+
+  def get_log_file(test_file)
+    dir  = 'log/' + test_file.gsub(/[^\/]*$/, '')
+    unless File.directory?(dir)
+      FileUtils.mkdir_p(dir, :mode => 0700)
+    end
+    "log/#{test_file}.log"
   end
 
 end

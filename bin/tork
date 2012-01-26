@@ -60,6 +60,7 @@ warn 'tork: Absorbing test execution overhead...'
   when :over then warn 'tork: Reabsorbing changed overhead files...'
   else
     test_file, line_numbers, *details = details
+    log_file = "log/tork/" + test_file + '.log'
     message = [evstr.upcase, test_file, line_numbers.inspect, details].join(' ')
 
     color = case event
@@ -67,7 +68,7 @@ warn 'tork: Absorbing test execution overhead...'
             when :fail then "\e[31m%s\e[0m" # red
             end
     message = color % message if color and STDOUT.tty?
-    message = [message, File.read(test_file + '.log'), message] if event == :fail
+    message = [message, File.read(log_file), message] if event == :fail
 
     puts message
   end
